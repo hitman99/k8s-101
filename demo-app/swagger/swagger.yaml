@@ -1,0 +1,147 @@
+consumes:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+definitions:
+  Json:
+    description: Health Check (default view)
+    example:
+      code: 5352118603216555345
+      status: Et molestiae voluptas.
+    properties:
+      code:
+        description: status code
+        example: 5352118603216555345
+        format: int64
+        type: integer
+      status:
+        description: system status
+        example: Et molestiae voluptas.
+        type: string
+    required:
+    - status
+    - code
+    title: 'Mediatype identifier: application/json; view=default'
+    type: object
+  error:
+    description: Error response media type (default view)
+    example:
+      code: invalid_value
+      detail: Value of ID must be an integer
+      id: 3F1FKVRR
+      meta:
+        timestamp: 1458609066
+      status: "400"
+    properties:
+      code:
+        description: an application-specific error code, expressed as a string value.
+        example: invalid_value
+        type: string
+      detail:
+        description: a human-readable explanation specific to this occurrence of the
+          problem.
+        example: Value of ID must be an integer
+        type: string
+      id:
+        description: a unique identifier for this particular occurrence of the problem.
+        example: 3F1FKVRR
+        type: string
+      meta:
+        additionalProperties: true
+        description: a meta object containing non-standard meta-information about
+          the error.
+        example:
+          timestamp: 1458609066
+        type: object
+      status:
+        description: the HTTP status code applicable to this problem, expressed as
+          a string value.
+        example: "400"
+        type: string
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+host: localhost
+info:
+  contact:
+    email: tomas@adomavicius.com
+    name: Tomas A.
+  description: Kubernetes 101 Demo application
+  title: demo-app
+  version: ""
+paths:
+  /:
+    get:
+      operationId: public#/
+      responses:
+        "200":
+          description: File downloaded
+          schema:
+            type: file
+      schemes:
+      - http
+      summary: Download static/index.html
+  /health:
+    get:
+      description: Perform health check.
+      operationId: health#health
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Json'
+      schemes:
+      - http
+      summary: health health
+      tags:
+      - health
+  /images/{filepath}:
+    get:
+      operationId: public#/images/*filepath
+      parameters:
+      - description: Relative file path
+        in: path
+        name: filepath
+        required: true
+        type: string
+      responses:
+        "200":
+          description: File downloaded
+          schema:
+            type: file
+        "404":
+          description: File not found
+          schema:
+            $ref: '#/definitions/error'
+      schemes:
+      - http
+      summary: Download static/images
+  /styles/{filepath}:
+    get:
+      operationId: public#/styles/*filepath
+      parameters:
+      - description: Relative file path
+        in: path
+        name: filepath
+        required: true
+        type: string
+      responses:
+        "200":
+          description: File downloaded
+          schema:
+            type: file
+        "404":
+          description: File not found
+          schema:
+            $ref: '#/definitions/error'
+      schemes:
+      - http
+      summary: Download static/styles
+produces:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+schemes:
+- http
+swagger: "2.0"

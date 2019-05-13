@@ -12,7 +12,8 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use: "demo",
+	Use:   "demo",
+	Short: "Kubernetes 101 demo application",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Create service
 		service := goa.New("demo")
@@ -26,9 +27,11 @@ var rootCmd = &cobra.Command{
 		// Mount controllers
 		c := controllers.NewHealthController(service)
 		app.MountHealthController(service, c)
+		f := controllers.NewPublicController(service)
+		app.MountPublicController(service, f)
 
 		// Start service
-		if err := service.ListenAndServe(":80"); err != nil {
+		if err := service.ListenAndServe("0.0.0.0:80"); err != nil {
 			service.LogError("startup", "err", err)
 		}
 	},
