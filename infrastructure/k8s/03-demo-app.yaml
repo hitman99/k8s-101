@@ -2,3 +2,50 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: kube-demo
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-app
+  namespace: kube-demo
+  labels:
+    app: demo
+spec:
+  selector:
+    matchLabels:
+      app: demo
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+        - name: app
+          image: hitman99/k8s-101
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "150m"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /usr/src/ilock-web/dist/env.json
+              subPath: env.json
+            - name: config-volume
+              mountPath: /usr/src/ilock-web/config.json
+              subPath: config.json
+
+      volumes:
+        - name: config-volume
+          configMap:
+            name: ilock-env
+
+      imagePullSecrets:
+        - name: inotechas-registry
