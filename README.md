@@ -5,7 +5,7 @@ This repo contains everything from the presentation "Kubernetes 101" which took 
 Repo structure is:
 
 *  [demo-app](./demo-app) - source code for demo application
-*  [infrastructure](./infrastructure) - instructions and manifets on how to bootstrap your Kubernetes cluster
+*  [infrastructure](./infrastructure) - instructions and manifests on how to setup everything
 *  [slides](./slides) - presentation slides
 
 
