@@ -6,7 +6,7 @@ spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
     # Fill in your email
-    email: your@email.com
+    email: tomas@adomavicius.com
     privateKeySecretRef:
       name: letsencrypt
     dns01:

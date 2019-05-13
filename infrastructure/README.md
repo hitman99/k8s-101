@@ -18,13 +18,22 @@ This is infrastructure setup for kubernetes-101 demo project. Follow steps below
     kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/mandatory.yaml
     kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/cloud-generic.yaml
     
+    # Wait for LoadBalancer to assign external IP and configure DNS A record
+    # ** This will only work if you have domain name configured in DO
+    doctl compute domain records create \
+    --record-type A --record-name '@' \
+    --record-data `kubectl get svc -n ingress-nginx -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}'` \
+    k8s.adomavicius.com
+    
     # cert-manager operator
-    kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/v0.7.2/deploy/manifests/00-crds.yaml
-    kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/v0.7.2/deploy/manifests/01-namespace.yaml
-    kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/v0.7.2/deploy/manifests/cert-manager.yaml
+    kubectl apply -f k8s/00-cert-manager.yaml
+    
+    # Create new Token/Key in DigitalOcean UI, paste the command below, then copy token and execute command (MacOS only)
+    kubectl create secret generic digitalocean-dns --from-literal access-token=`pbpaste` --namespace cert-manager
+    
     
     # cert-manger config for demo app
-    # ** This only works you have domain name configured in DigitalOcean, as this issuer is using DNS01 challenge
+    # ** This will only work if you have domain name configured in DigitalOcean **
     
     kubectl apply -f k8s/01-issuer.yaml
     kubectl apply -f k8s/02-certificate.yaml 
