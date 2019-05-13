@@ -1,5 +1,7 @@
 #!/bin/bash
 
+DOMAIN=${1}
+
 function get_loadbalancer_ip() {
 	echo `kubectl get svc -n ingress-nginx -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}'`
 }
@@ -17,8 +19,7 @@ function setup() {
 
 	doctl compute domain records create \
     --record-type A --record-name '@' \
-    --record-data ${ip} \
-    k8s.adomavicius.com
+    --record-data ${ip} ${DOMAIN}
 
 	read -s -p "Paste DO Token" dotoken
 
@@ -35,6 +36,13 @@ function setup() {
 
 
 
+if [[ $DOMAIN == "" ]]; then
+	echo
+	echo "domain name missing as first argument"
+	echo "Usage: $0 <domain name (example.com)>"
+	echo
+	exit 1
+fi
 
 echo "This will setup Kubernetes 101 demo in active cluster. You should have the cluster running already
 This is similar to running all commands in readme.md"

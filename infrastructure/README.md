@@ -38,7 +38,10 @@ This is infrastructure setup for kubernetes-101 demo project. Follow steps below
     kubectl apply -f k8s/01-issuer.yaml
     kubectl apply -f k8s/02-certificate.yaml 
     ```
+    ###or
     
+    run the [setup.sh](./setup.sh) script. For script to work you will need to have
+    `doctl` and `jq` installed
 
 4.  Deploy the demo application
     ```
