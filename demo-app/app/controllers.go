@@ -69,17 +69,34 @@ type PublicController interface {
 func MountPublicController(service *goa.Service, ctrl PublicController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/static/*filepath", ctrl.MuxHandler("preflight", handlePublicOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/images/*filepath", ctrl.MuxHandler("preflight", handlePublicOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/", ctrl.MuxHandler("preflight", handlePublicOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/styles/*filepath", ctrl.MuxHandler("preflight", handlePublicOrigin(cors.HandlePreflight()), nil))
 
-	h = ctrl.FileHandler("/static/*filepath", "*")
+	h = ctrl.FileHandler("/images/*filepath", "static/images")
 	h = handlePublicOrigin(h)
-	service.Mux.Handle("GET", "/static/*filepath", ctrl.MuxHandler("serve", h, nil))
-	service.LogInfo("mount", "ctrl", "Public", "files", "*", "route", "GET /static/*filepath")
+	service.Mux.Handle("GET", "/images/*filepath", ctrl.MuxHandler("serve", h, nil))
+	service.LogInfo("mount", "ctrl", "Public", "files", "static/images", "route", "GET /images/*filepath")
 
-	h = ctrl.FileHandler("/static/", "*/index.html")
+	h = ctrl.FileHandler("/", "static/index.html")
 	h = handlePublicOrigin(h)
-	service.Mux.Handle("GET", "/static/", ctrl.MuxHandler("serve", h, nil))
-	service.LogInfo("mount", "ctrl", "Public", "files", "*/index.html", "route", "GET /static/")
+	service.Mux.Handle("GET", "/", ctrl.MuxHandler("serve", h, nil))
+	service.LogInfo("mount", "ctrl", "Public", "files", "static/index.html", "route", "GET /")
+
+	h = ctrl.FileHandler("/styles/*filepath", "static/styles")
+	h = handlePublicOrigin(h)
+	service.Mux.Handle("GET", "/styles/*filepath", ctrl.MuxHandler("serve", h, nil))
+	service.LogInfo("mount", "ctrl", "Public", "files", "static/styles", "route", "GET /styles/*filepath")
+
+	h = ctrl.FileHandler("/images/", "static/images/index.html")
+	h = handlePublicOrigin(h)
+	service.Mux.Handle("GET", "/images/", ctrl.MuxHandler("serve", h, nil))
+	service.LogInfo("mount", "ctrl", "Public", "files", "static/images/index.html", "route", "GET /images/")
+
+	h = ctrl.FileHandler("/styles/", "static/styles/index.html")
+	h = handlePublicOrigin(h)
+	service.Mux.Handle("GET", "/styles/", ctrl.MuxHandler("serve", h, nil))
+	service.LogInfo("mount", "ctrl", "Public", "files", "static/styles/index.html", "route", "GET /styles/")
 }
 
 // handlePublicOrigin applies the CORS response headers corresponding to the origin.

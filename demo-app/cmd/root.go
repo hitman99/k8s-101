@@ -26,6 +26,8 @@ var rootCmd = &cobra.Command{
 		// Mount controllers
 		c := controllers.NewHealthController(service)
 		app.MountHealthController(service, c)
+		f := controllers.NewPublicController(service)
+		app.MountPublicController(service, f)
 
 		// Start service
 		if err := service.ListenAndServe(":80"); err != nil {
