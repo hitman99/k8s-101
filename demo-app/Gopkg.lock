@@ -26,11 +26,12 @@
   version = "5.0.2"
 
 [[projects]]
-  digest = "1:24e947bb2bf0f4e86b26b665556f20fee3dfad38fffc687472b54c99bd1ff692"
+  digest = "1:fb8fb16828cc9c21510ac285e33dcd5183244327e77b7491bfd09ee5559efd21"
   name = "github.com/goadesign/goa"
   packages = [
     ".",
     "client",
+    "cors",
     "design",
     "design/apidsl",
     "dslengine",
@@ -120,6 +121,7 @@
   input-imports = [
     "github.com/goadesign/goa",
     "github.com/goadesign/goa/client",
+    "github.com/goadesign/goa/cors",
     "github.com/goadesign/goa/design",
     "github.com/goadesign/goa/design/apidsl",
     "github.com/goadesign/goa/goatest",
